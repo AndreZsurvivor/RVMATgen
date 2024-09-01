@@ -9,10 +9,10 @@ void RVMATgenLayer::createWindow_Debug()
 			clicked = true;
 		if (clicked)
 		{
-			std::string source = "D:\\testconvert\\input.png";
-			std::string destination = "D:\\testconvert\\output.paa";
+			std::string source = rvmatGen::Config::get_texture_dir();
+			std::string destination = rvmatGen::Config::get_mod_data_dir();
 			std::string exepath = rvmatGen::Config::get_imagetopaa_path();
-			rvmatGen::runImageToPAA(exepath, source, destination);
+			rvmatGen::convertImagesInParallel(exepath, source, destination);
 		}
 	}
 	ImGui::End();//end config window

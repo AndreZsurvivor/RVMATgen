@@ -3,6 +3,9 @@
 
 namespace rvmatGen
 {
+    std::mutex cout_mutex;
+    std::mutex queue_mutex;
+
     bool pathIsValid(const std::string& path)
     {
         std::filesystem::path fsPath(path);
@@ -52,5 +55,67 @@ namespace rvmatGen
 
         std::cout << "Executing command: " << command.str() << std::endl;
         return std::system(command.str().c_str());
+    }
+
+    void convertImage(const std::string& exePath, const std::filesystem::path& inputFile, const std::filesystem::path& outputDir) {
+        std::filesystem::path outputFile = outputDir / inputFile.filename().replace_extension(".paa");
+
+        std::string command = quoteString(exePath) + " " +
+            quoteString(inputFile.string()) + " " +
+            quoteString(outputFile.string());
+
+        {
+            std::lock_guard<std::mutex> lock(cout_mutex);
+            std::cout << "Executing: " << command << std::endl;
+        }
+
+        int result = std::system(command.c_str());
+
+        {
+            std::lock_guard<std::mutex> lock(cout_mutex);
+            if (result == 0) {
+                std::cout << "Successfully converted: " << inputFile << std::endl;
+            }
+            else {
+                std::cout << "Failed to convert: " << inputFile << " (Error code: " << result << ")" << std::endl;
+            }
+        }
+    }
+
+    void workerThread(const std::string& exePath, const std::filesystem::path& outputDir,
+        std::queue<std::filesystem::path>& workQueue) {
+        while (true) {
+            std::filesystem::path inputFile;
+            {
+                std::lock_guard<std::mutex> lock(queue_mutex);
+                if (workQueue.empty()) {
+                    break;
+                }
+                inputFile = workQueue.front();
+                workQueue.pop();
+            }
+            convertImage(exePath, inputFile, outputDir);
+        }
+    }
+
+    void convertImagesInParallel(const std::string& exePath, const std::string& inputDir, const std::string& outputDir) {
+        std::queue<std::filesystem::path> workQueue;
+        for (const auto& entry : std::filesystem::directory_iterator(inputDir)) {
+            if (entry.is_regular_file() && (entry.path().extension() == ".png" || entry.path().extension() == ".jpg")) {
+                workQueue.push(entry.path());
+            }
+        }
+
+        unsigned int threadCount = std::thread::hardware_concurrency();
+        threadCount = threadCount == 0 ? 4 : threadCount; // Use 4 threads if we can't detect core count
+
+        std::vector<std::thread> threads;
+        for (unsigned int i = 0; i < threadCount; ++i) {
+            threads.emplace_back(workerThread, exePath, outputDir, std::ref(workQueue));
+        }
+
+        for (auto& thread : threads) {
+            thread.join();
+        }
     }
 }

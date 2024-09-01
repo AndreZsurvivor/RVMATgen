@@ -7,6 +7,9 @@
 #include <algorithm>
 #include <map>
 #include <filesystem>
+#include <thread>
+#include <mutex>
+#include <queue>
 //Walnut
 #include "Walnut/Application.h"
 #include "Walnut/Image.h"
@@ -45,4 +48,6 @@ namespace rvmatGen
 	std::string quoteString(const std::string& str);
 	std::vector<const char*> findAndCopyStrings(const std::vector<std::string>& input, const std::string& token);
 	int runImageToPAA(const std::string& exePath, const std::string& source, const std::string& destination = "", int size = -1);
+	void convertImage(const std::string& exePath, const std::filesystem::path& inputFile, const std::filesystem::path& outputDir);
+	void convertImagesInParallel(const std::string& exePath, const std::string& inputDir, const std::string& outputDir);
 }

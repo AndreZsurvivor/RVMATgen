@@ -23,7 +23,7 @@ void RVMATgenLayer::createWindow_Config()
 	ImGui::Begin("Configuration");//begin config window
 
 	{
-		static char texture_path[256] = "path\\to\\textures";
+		static char texture_path[256] = "D:\\testconvert";
 		ImGui::InputText("Texture directory path", texture_path, IM_ARRAYSIZE(texture_path));
 		ImGui::SameLine(); HelpMarker(
 			"enter the path to your folder with the textures\n");
@@ -48,14 +48,14 @@ void RVMATgenLayer::createWindow_Config()
 			ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), "***TEXTURE_PATH_ERROR*** path or directory does not exist.");
 	}
 	{
-		static char mod_path[256] = "path\\to\\mod";
-		ImGui::InputText("Mod directory path", mod_path, IM_ARRAYSIZE(mod_path));
+		static char mod_path[256] = "D:\\testconvert\\output";
+		ImGui::InputText("Output directory path", mod_path, IM_ARRAYSIZE(mod_path));
 		ImGui::SameLine(); HelpMarker(
-			"enter the path to your mod folder\n");
+			"enter the path to your output folder\n");
 		ImGui::SameLine();
 		bool clicked = false;
 		static bool path_error = false;
-		if (ImGui::Button("Set##MOD"))
+		if (ImGui::Button("Set##OUTPUT"))
 			clicked = true;
 		if (clicked)
 		{
@@ -68,10 +68,10 @@ void RVMATgenLayer::createWindow_Config()
 				path_error = true;
 		}
 		if (path_error)
-			ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), "***MOD_PATH_ERROR*** path or directory does not exist.");
+			ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), "***OUTPUT_PATH_ERROR*** path or directory does not exist.");
 	}
 	{
-		static char imagetopaa_path[256] = "path\\to\\imagetopaa.exe";
+		static char imagetopaa_path[256] = "E:\\SteamLibrary\\steamapps\\common\\DayZ Tools\\Bin\\ImageToPAA\\ImageToPAA.exe";
 		ImGui::InputText("ImageToPAA path", imagetopaa_path, IM_ARRAYSIZE(imagetopaa_path));
 		ImGui::SameLine(); HelpMarker(
 			"enter the path to your copy of imagetopaa.exe\n");

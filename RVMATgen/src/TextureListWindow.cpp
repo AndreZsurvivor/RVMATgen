@@ -26,7 +26,8 @@ void RVMATgenLayer::createWindow_TextureList()
     }
     else
     {
-        if (ImGui::BeginListBox("Texture Sets"))
+        ImGui::Text("Texture Sets");
+        if (ImGui::BeginListBox("##Texture Sets", ImVec2(-1, 500)))
         {
             for (int n = 0; n < display_texture_sets.size(); n++)
             {
@@ -39,7 +40,8 @@ void RVMATgenLayer::createWindow_TextureList()
             }
             ImGui::EndListBox();
         }
-        if (ImGui::BeginListBox("Textures"))
+        ImGui::Text("Texture Files");
+        if (ImGui::BeginListBox("##Texture Files", ImVec2(-1, 100)))
         {
             display_textures = rvmatGen::findAndCopyStrings(texture_keys, display_texture_sets[texset_current_idx]);
             for (int n = 0; n < display_textures.size(); n++)
