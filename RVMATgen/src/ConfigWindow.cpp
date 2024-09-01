@@ -3,6 +3,8 @@
 //std::string texture_dir = R"(D:\stMo_assets_source\vehicles\civilian\Bus_Citaro\export_SP\Ceiling_backint)";
 rvmatGen::Scanner scanner;
 
+
+
 static void HelpMarker(const char* desc)
 {
 	ImGui::TextDisabled("*");
@@ -16,7 +18,7 @@ static void HelpMarker(const char* desc)
 	}
 }
 
-void createWindow_Config()
+void RVMATgenLayer::createWindow_Config()
 {
 	ImGui::Begin("Configuration");//begin config window
 
@@ -36,7 +38,8 @@ void createWindow_Config()
 			{
 				path_error = false;
 				rvmatGen::Config::set_texture_dir(texture_path);
-				scanner.scan_directory_for_textures();
+				RVMATgenLayer layer;
+				m_texture_manager.scan_and_update(texture_path);
 			}
 			else
 				path_error = true;

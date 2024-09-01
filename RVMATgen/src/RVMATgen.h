@@ -12,9 +12,29 @@
 #include "TextureManager/TextureManager.h"
 
 
-void createWindow_Config();
-void createWindow_TextureList();
+class RVMATgenLayer : public Walnut::Layer
+{
+public:
+	virtual void OnUIRender() override
+	{
+		createWindow_Config();
+		createWindow_TextureList();
 
+
+		ImGui::ShowDemoWindow();
+	}
+private:
+	rvmatGen::TextureManager m_texture_manager;
+	rvmatGen::Scanner m_scanner;
+
+	void createWindow_Config();
+	void createWindow_TextureList();
+
+};
+
+
+
+//Utility function declarations
 namespace rvmatGen
 {
     bool pathIsValid(const std::string& path);

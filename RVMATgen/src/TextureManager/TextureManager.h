@@ -3,14 +3,19 @@
 #include <string>
 #include <vector>
 
+#include "Scanner/Scanner.h"
+
 namespace rvmatGen
 {
     class TextureManager
     {
     public:
-        TextureManager();
+        TextureManager() : m_scanner() {}
 
         TextureManager getTextureManager() { return *this; }
+
+        void scan_and_update(const std::string& path);
+
         // Set all texture files
         void set_texture_files(const std::map<std::string, std::string>& files);
 
@@ -36,6 +41,9 @@ namespace rvmatGen
         size_t get_texture_count() const;
 
     private:
+        Scanner m_scanner;
         std::map<std::string, std::string> m_texture_files;
+
+        void update_textures(const std::map<std::string, std::string>& new_textures);
     };
 }

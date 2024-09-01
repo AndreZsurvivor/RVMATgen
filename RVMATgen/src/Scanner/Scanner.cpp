@@ -6,12 +6,13 @@ namespace rvmatGen
     {
     }
 
-    std::map<std::string, std::string> Scanner::scan_directory_for_textures()
+
+    std::map<std::string, std::string> Scanner::scan_directory_for_textures(const std::string& directory_path)
     {
         std::map<std::string, std::string> texture_files;
         std::regex udim_pattern(R"(azw_(\w+)(\d{4})_(co|nohq|smdi|as)\.(png|paa))");
 
-        for (const auto& entry : std::filesystem::directory_iterator(Config::get_texture_dir())) {
+        for (const auto& entry : std::filesystem::directory_iterator(directory_path)) {
             if (entry.is_regular_file()) {
                 std::string filename = entry.path().filename().string();
                 std::smatch match;

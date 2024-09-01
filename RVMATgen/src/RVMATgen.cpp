@@ -2,25 +2,6 @@
 #include "RVMATgen.h"
 #include "Walnut/EntryPoint.h"
 
-
-
-class RVMATgenLayer : public Walnut::Layer
-{
-public:
-
-	virtual void OnUIRender() override
-	{
-		createWindow_Config();
-		createWindow_TextureList();
-
-
-		ImGui::ShowDemoWindow();
-	}
-private:
-	rvmatGen::TextureManager m_texture_manager;
-	rvmatGen::Scanner m_scanner;
-};
-
 Walnut::Application* Walnut::CreateApplication(int argc, char** argv)
 {
 	Walnut::ApplicationSpecification spec;

@@ -13,7 +13,7 @@ namespace rvmatGen
 	{
 	public:
 		Scanner();
-		std::map<std::string, std::string> scan_directory_for_textures();
+		std::map<std::string, std::string> scan_directory_for_textures(const std::string& directory_path);
 
 	private:
 
