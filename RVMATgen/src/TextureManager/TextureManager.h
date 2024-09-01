@@ -9,6 +9,7 @@ namespace rvmatGen
 {
     class TextureManager
     {
+
     public:
         TextureManager() : m_scanner() {}
 
@@ -34,6 +35,9 @@ namespace rvmatGen
         // Get all texture keys
         std::vector<std::string> get_texture_keys() const;
 
+        // Get all texture sets
+        std::vector<std::string> get_texture_sets() const;
+
         // Clear all texture files
         void clear_texture_files();
 
@@ -43,7 +47,6 @@ namespace rvmatGen
     private:
         Scanner m_scanner;
         std::map<std::string, std::string> m_texture_files;
-
-        void update_textures(const std::map<std::string, std::string>& new_textures);
+        std::vector<std::string> m_texture_sets;
     };
 }

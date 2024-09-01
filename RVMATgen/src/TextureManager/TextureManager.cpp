@@ -3,21 +3,8 @@ namespace rvmatGen
 {
 
     void TextureManager::scan_and_update(const std::string& directory_path) {
-        auto scanned_textures = m_scanner.scan_directory_for_textures(directory_path);
-        update_textures(scanned_textures);
-    }
-
-    void TextureManager::update_textures(const std::map<std::string, std::string>& new_textures)
-    {
-        m_texture_files = new_textures;
-
-        std::cout << "TextureManager::update_textures - Updated with " << new_textures.size() << " textures" << std::endl;
-
-        // Optional: Print out all textures for debugging
-        for (const auto& [key, path] : m_texture_files)
-        {
-            std::cout << "Texture: " << key << " -> " << path << std::endl;
-        }
+        m_texture_files = m_scanner.scan_directory_for_textures(directory_path);
+        m_texture_sets = m_scanner.scan_texkeys_for_texsets(get_texture_keys());
     }
 
     void TextureManager::set_texture_files(const std::map<std::string, std::string>& files)
@@ -59,6 +46,11 @@ namespace rvmatGen
             keys.push_back(pair.first);
         }
         return keys;
+    }
+
+    std::vector<std::string> TextureManager::get_texture_sets() const
+    {
+        return m_texture_sets;
     }
 
     void TextureManager::clear_texture_files()

@@ -82,7 +82,7 @@ void RVMATgenLayer::createWindow_Config()
 			clicked = true;
 		if (clicked)
 		{
-			if (rvmatGen::pathIsValid(imagetopaa_path))
+			if (rvmatGen::isValidImagetopaaExe(imagetopaa_path))
 			{
 				path_error = false;
 				rvmatGen::Config::set_imagetopaa_path(imagetopaa_path);
