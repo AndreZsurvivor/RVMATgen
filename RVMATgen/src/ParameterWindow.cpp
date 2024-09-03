@@ -1,40 +1,42 @@
 #include "RVMATgen.h"
+#include "structs.h"
 
 void RVMATgenLayer::createWindow_Parameter()
 {
 	ImGui::Begin("RVMAT Parameters");//begin config window
 
 	ImGui::Text("Mod Texture Directory");
-	static char mod_texture_dir[128] = "mymod\\data";
-	ImGui::InputText("##MOD_TEXTURE_DIR", mod_texture_dir, IM_ARRAYSIZE(mod_texture_dir));
+	static char mod_data_dir[256] = "mymod\\data";
+	ImGui::InputText("##MOD_TEXTURE_DIR", mod_data_dir, IM_ARRAYSIZE(mod_data_dir));
 	ImGui::SameLine(); rvmatGen::GUI::HelpMarker("enter the relative  path to your texture folder in the mod\n");
 
 	static float textWidth = 500.0f;
 	static float floatWidth = 100.0f;
+	static float intWidth = 125.0f;
 
 	ImGui::NewLine();	ImGui::Text("Ambient");
-	static ImVec4 AmbientRGBA = { 1.0f, 1.0f, 1.0f, 1.0f };
+	static ImVec4 ambientRGBA = { 1.0f, 1.0f, 1.0f, 1.0f };
 						ImGui::Text("R"); ImGui::SetNextItemWidth(floatWidth);
-	ImGui::SameLine();	ImGui::InputFloat("##AMBIENT_R", &AmbientRGBA.x, 0.01f, 1.0f, "%.2f");
+	ImGui::SameLine();	ImGui::InputFloat("##AMBIENT_R", &ambientRGBA.x, 0.01f, 1.0f, "%.2f");
 	ImGui::SameLine();	ImGui::Text("G"); ImGui::SetNextItemWidth(floatWidth);
-	ImGui::SameLine();	ImGui::InputFloat("##AMBIENT_G", &AmbientRGBA.y, 0.01f, 1.0f, "%.2f");
+	ImGui::SameLine();	ImGui::InputFloat("##AMBIENT_G", &ambientRGBA.y, 0.01f, 1.0f, "%.2f");
 	ImGui::SameLine();	ImGui::Text("B"); ImGui::SetNextItemWidth(floatWidth);
-	ImGui::SameLine();	ImGui::InputFloat("##AMBIENT_B", &AmbientRGBA.z, 0.01f, 1.0f, "%.2f");
-	rvmatGen::GUI::PlusMinusRGB("AMBIENT", AmbientRGBA);
+	ImGui::SameLine();	ImGui::InputFloat("##AMBIENT_B", &ambientRGBA.z, 0.01f, 1.0f, "%.2f");
+	rvmatGen::GUI::PlusMinusRGB("AMBIENT", ambientRGBA);
 	ImGui::SameLine();	ImGui::Text("     A"); ImGui::SetNextItemWidth(floatWidth);
-	ImGui::SameLine();	ImGui::InputFloat("##AMBIENT_A", &AmbientRGBA.w, 0.01f, 1.0f, "%.2f");
+	ImGui::SameLine();	ImGui::InputFloat("##AMBIENT_A", &ambientRGBA.w, 0.01f, 1.0f, "%.2f");
 
 	ImGui::NewLine();	ImGui::Text("Diffuse");
-	static ImVec4 DiffuseRGBA = { 0.5f, 0.5f, 0.5f, 1.0f };
+	static ImVec4 diffuseRGBA = { 0.5f, 0.5f, 0.5f, 1.0f };
 						ImGui::Text("R"); ImGui::SetNextItemWidth(floatWidth);
-	ImGui::SameLine();	ImGui::InputFloat("##DIFFUSE_R", &DiffuseRGBA.x, 0.01f, 1.0f, "%.2f");
+	ImGui::SameLine();	ImGui::InputFloat("##DIFFUSE_R", &diffuseRGBA.x, 0.01f, 1.0f, "%.2f");
 	ImGui::SameLine();	ImGui::Text("G"); ImGui::SetNextItemWidth(floatWidth);
-	ImGui::SameLine();	ImGui::InputFloat("##DIFFUSE_G", &DiffuseRGBA.y, 0.01f, 1.0f, "%.2f");
+	ImGui::SameLine();	ImGui::InputFloat("##DIFFUSE_G", &diffuseRGBA.y, 0.01f, 1.0f, "%.2f");
 	ImGui::SameLine();	ImGui::Text("B"); ImGui::SetNextItemWidth(floatWidth);
-	ImGui::SameLine();	ImGui::InputFloat("##DIFFUSE_B", &DiffuseRGBA.z, 0.01f, 1.0f, "%.2f");
-	rvmatGen::GUI::PlusMinusRGB("DIFFUSE", DiffuseRGBA);
+	ImGui::SameLine();	ImGui::InputFloat("##DIFFUSE_B", &diffuseRGBA.z, 0.01f, 1.0f, "%.2f");
+	rvmatGen::GUI::PlusMinusRGB("DIFFUSE", diffuseRGBA);
 	ImGui::SameLine();	ImGui::Text("     A"); ImGui::SetNextItemWidth(floatWidth);
-	ImGui::SameLine();	ImGui::InputFloat("##DIFFUSE_A", &DiffuseRGBA.w, 0.01f, 1.0f, "%.2f");
+	ImGui::SameLine();	ImGui::InputFloat("##DIFFUSE_A", &diffuseRGBA.w, 0.01f, 1.0f, "%.2f");
 
 	ImGui::NewLine(); 	ImGui::Text("Forced Diffuse");
 	static ImVec4 forcedDiffuseRGBA = { 0.0f, 0.0f, 0.0f, 0.0f };
@@ -72,6 +74,11 @@ void RVMATgenLayer::createWindow_Parameter()
 	ImGui::SameLine();	ImGui::Text("     A"); ImGui::SetNextItemWidth(floatWidth);
 	ImGui::SameLine();	ImGui::InputFloat("##SPECULAR_A", &specularRGBA.w, 0.01f, 1.0f, "%.2f");
 
+	ImGui::NewLine(); ImGui::Text("Specular Power");
+	static int specularPower = 50;
+	ImGui::SameLine();	ImGui::SetNextItemWidth(intWidth); ImGui::InputInt("##SPECULAR_POWER", &specularPower, 1, 10);
+
+
 
 
 
@@ -82,10 +89,20 @@ void RVMATgenLayer::createWindow_Parameter()
 			clicked = true;
 		if (clicked)
 		{
+			rvmatGen::Config::set_mod_data_dir(mod_data_dir);
+			rvmatGen::RVMATparameters parameters;
+			parameters.ambientRGBA = ambientRGBA;
+			parameters.diffuseRGBA = diffuseRGBA;
+			parameters.emmisiveRGBA = emmisiveRGBA;
+			parameters.forcedDiffuseRGBA = forcedDiffuseRGBA;
+			parameters.specularPower = specularPower;
+			parameters.specularRGBA = specularRGBA;
+
 			auto texture_sets = m_texture_manager.get_texture_sets();
 			for (const auto& textureSet : texture_sets)
 			{
-				bool success = m_rvmatCreator.createRVMAT(textureSet, "udim");
+				parameters.texture_set = textureSet;
+				bool success = m_rvmatCreator.createRVMAT(parameters);
 			}
 		}
 	}

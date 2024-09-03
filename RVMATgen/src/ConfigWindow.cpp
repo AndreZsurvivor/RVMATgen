@@ -32,8 +32,8 @@ void RVMATgenLayer::createWindow_Config()
 			ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), "***TEXTURE_PATH_ERROR*** path or directory does not exist.");
 	}
 	{
-		static char mod_path[256] = "D:\\testconvert\\output";
-		ImGui::InputText("Output directory path", mod_path, IM_ARRAYSIZE(mod_path));
+		static char output_dir[256] = "D:\\testconvert\\output";
+		ImGui::InputText("Output directory path", output_dir, IM_ARRAYSIZE(output_dir));
 		ImGui::SameLine(); rvmatGen::GUI::HelpMarker(
 			"enter the path to your output folder\n");
 		ImGui::SameLine();
@@ -43,10 +43,10 @@ void RVMATgenLayer::createWindow_Config()
 			clicked = true;
 		if (clicked)
 		{
-			if (rvmatGen::pathIsValid(mod_path))
+			if (rvmatGen::pathIsValid(output_dir))
 			{
 				path_error = false;
-				rvmatGen::Config::set_mod_data_dir(mod_path);
+				rvmatGen::Config::set_output_dir(output_dir);
 			}
 			else
 				path_error = true;

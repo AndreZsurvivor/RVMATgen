@@ -3,9 +3,10 @@ namespace rvmatGen
 {
     std::string quoteString(const std::string& str);
 
-    bool RVMATcreator::writeRVMATFile(const std::string& textureSet, const std::string& udim, const std::string& content)
+    bool RVMATcreator::writeRVMATFile(const std::string& texture_set, const std::string& content)
     {
-        std::string filename = "azw_" + textureSet + "_" + udim + ".rvmat";
+        
+        std::string filename = "azw_" + texture_set + ".rvmat";
         std::string fullPath = (std::filesystem::path(rvmatGen::Config::get_output_dir()) / filename).string();
 
         try {
@@ -22,20 +23,20 @@ namespace rvmatGen
             return false;
         }
     }
-    std::string RVMATcreator::generateRVMATContent(const std::string& textureSet, const std::string& udim)
+    std::string RVMATcreator::generateRVMATContent(const rvmatGen::RVMATparameters& parameters)
     {
         std::stringstream ss;
-        ss << "ambient[] = {1,1,1,1};\n"
-            << "diffuse[] = {0.5,0.5,0.5,1};\n"
-            << "forcedDiffuse[] = {0,0,0,0};\n"
-            << "emmisive[] = {0,0,0,1};\n"
-            << "specular[] = {" << m_specularR << "," << m_specularG << "," << m_specularB << ",1};\n"
-            << "specularPower = " << m_specularPower << ";\n"
+        ss << "ambient[] = {" << parameters.ambientRGBA.x << "," << parameters.ambientRGBA.y << "," << parameters.ambientRGBA.z << "," << parameters.ambientRGBA.w << "};\n"
+            << "diffuse[] = {" << parameters.diffuseRGBA.x << "," << parameters.diffuseRGBA.y << "," << parameters.diffuseRGBA.z << "," << parameters.diffuseRGBA.w << "};\n"
+            << "forcedDiffuse[] = {" << parameters.forcedDiffuseRGBA.x << "," << parameters.forcedDiffuseRGBA.y << "," << parameters.forcedDiffuseRGBA.z << "," << parameters.forcedDiffuseRGBA.w << "};\n"
+            << "emmisive[] = {" << parameters.emmisiveRGBA.x << "," << parameters.emmisiveRGBA.y << "," << parameters.emmisiveRGBA.z << "," << parameters.emmisiveRGBA.w << "};\n"
+            << "specular[] = {" << parameters.specularRGBA.x << "," << parameters.specularRGBA.y << "," << parameters.specularRGBA.z << "," << parameters.specularRGBA.w << "};\n"
+            << "specularPower = " << parameters.specularPower << ";\n"
             << "PixelShaderID = \"Super\";\n"
             << "VertexShaderID = \"Super\";\n"
             << "class Stage1\n"
             << "{\n"
-            << "    texture = \"" << getTexturePath(textureSet, udim, "nohq") << "\";\n"
+            << "    texture = \"" << getTexturePath(parameters.texture_set, "nohq") << "\";\n"
             << "    uvSource = \"tex\";\n"
             << "    class uvTransform\n"
             << "    {\n"
@@ -62,17 +63,17 @@ namespace rvmatGen
 
         return ss.str();
     }
-    std::string RVMATcreator::getTexturePath(const std::string& textureSet, const std::string& udim, const std::string& type)
+    std::string RVMATcreator::getTexturePath(const std::string& textureSet, const std::string& type)
     {
-        std::string source_filename = "azw_" + textureSet + "_" + type + ".png";
-        std::string output_filename = "azw_" + textureSet + "_" + type + ".paa";
+        const std::string& source_filename = "azw_" + textureSet + "_" + type + ".png";
+        const std::string& output_filename = "azw_" + textureSet + "_" + type + ".paa";
 
 
-        std::string sourceDir = rvmatGen::Config::get_texture_dir();
-        std::string fullSourcePath = (std::filesystem::path(sourceDir) / source_filename).string();
+        const std::string& sourceDir = rvmatGen::Config::get_texture_dir();
+        const std::string& fullSourcePath = (std::filesystem::path(sourceDir) / source_filename).string();
 
-        std::string modDir = "azw_Citaro\\data\\";
-        std::string fullRVMATPath = (std::filesystem::path(modDir) / output_filename).string();
+        const std::string& modDir = rvmatGen::Config::get_mod_data_dir();
+        const std::string& fullRVMATPath = (std::filesystem::path(modDir) / output_filename).string();
 
         if (std::filesystem::exists(fullSourcePath))
         {
