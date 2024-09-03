@@ -15,5 +15,18 @@ void RVMATgenLayer::createWindow_Debug()
 			rvmatGen::convertImagesInParallel(exepath, source, destination);
 		}
 	}
+	{
+		bool clicked = false;
+		if (ImGui::Button("RVMAT"))
+			clicked = true;
+		if (clicked)
+		{
+			auto texture_sets = m_texture_manager.get_texture_sets();
+			for (const auto& textureSet : texture_sets)
+			{
+				bool success = m_rvmatCreator.createRVMAT(textureSet, "udim");
+			}
+		}
+	}
 	ImGui::End();//end config window
 }

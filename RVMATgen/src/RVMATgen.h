@@ -17,15 +17,18 @@
 #include "Scanner/Scanner.h"
 #include "Config/Config.h"
 #include "TextureManager/TextureManager.h"
+#include "RVMATcreator/RVMATcreator.h"
 
 
 class RVMATgenLayer : public Walnut::Layer
 {
+	friend class RVMATcreator;
 public:
 	virtual void OnUIRender() override
 	{
 		createWindow_Debug();
 		createWindow_Config();
+		createWindow_Parameter();
 		createWindow_TextureList();
 
 		ImGui::ShowDemoWindow();
@@ -33,9 +36,11 @@ public:
 private:
 	rvmatGen::TextureManager m_texture_manager;
 	rvmatGen::Scanner m_scanner;
+	rvmatGen::RVMATcreator m_rvmatCreator;
 
 	void createWindow_Debug();
 	void createWindow_Config();
+	void createWindow_Parameter();
 	void createWindow_TextureList();
 	
 };
@@ -43,7 +48,13 @@ private:
 //Utility function declarations
 namespace rvmatGen
 {
-    bool pathIsValid(const std::string& path);
+	namespace GUI
+	{
+		void HelpMarker(const char* desc);
+		void PlusMinusRGB(std::string name, ImVec4& rgba_vector);
+	}
+	
+	bool pathIsValid(const std::string& path);
 	bool isValidImagetopaaExe(const std::string& path);
 	std::string quoteString(const std::string& str);
 	std::vector<const char*> findAndCopyStrings(const std::vector<std::string>& input, const std::string& token);

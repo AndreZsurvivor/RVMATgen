@@ -3,21 +3,6 @@
 //std::string texture_dir = R"(D:\stMo_assets_source\vehicles\civilian\Bus_Citaro\export_SP\Ceiling_backint)";
 rvmatGen::Scanner scanner;
 
-
-
-static void HelpMarker(const char* desc)
-{
-	ImGui::TextDisabled("*");
-	if (ImGui::IsItemHovered())
-	{
-		ImGui::BeginTooltip();
-		ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
-		ImGui::TextUnformatted(desc);
-		ImGui::PopTextWrapPos();
-		ImGui::EndTooltip();
-	}
-}
-
 void RVMATgenLayer::createWindow_Config()
 {
 	ImGui::Begin("Configuration");//begin config window
@@ -25,8 +10,7 @@ void RVMATgenLayer::createWindow_Config()
 	{
 		static char texture_path[256] = "D:\\testconvert";
 		ImGui::InputText("Texture directory path", texture_path, IM_ARRAYSIZE(texture_path));
-		ImGui::SameLine(); HelpMarker(
-			"enter the path to your folder with the textures\n");
+		ImGui::SameLine(); rvmatGen::GUI::HelpMarker("enter the path to your folder with the textures\n");
 		ImGui::SameLine();
 		bool clicked = false;
 		static bool path_error = false;
@@ -50,7 +34,7 @@ void RVMATgenLayer::createWindow_Config()
 	{
 		static char mod_path[256] = "D:\\testconvert\\output";
 		ImGui::InputText("Output directory path", mod_path, IM_ARRAYSIZE(mod_path));
-		ImGui::SameLine(); HelpMarker(
+		ImGui::SameLine(); rvmatGen::GUI::HelpMarker(
 			"enter the path to your output folder\n");
 		ImGui::SameLine();
 		bool clicked = false;
@@ -73,7 +57,7 @@ void RVMATgenLayer::createWindow_Config()
 	{
 		static char imagetopaa_path[256] = "E:\\SteamLibrary\\steamapps\\common\\DayZ Tools\\Bin\\ImageToPAA\\ImageToPAA.exe";
 		ImGui::InputText("ImageToPAA path", imagetopaa_path, IM_ARRAYSIZE(imagetopaa_path));
-		ImGui::SameLine(); HelpMarker(
+		ImGui::SameLine(); rvmatGen::GUI::HelpMarker(
 			"enter the path to your copy of imagetopaa.exe\n");
 		ImGui::SameLine();
 		bool clicked = false;

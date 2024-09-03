@@ -6,6 +6,84 @@ namespace rvmatGen
     std::mutex cout_mutex;
     std::mutex queue_mutex;
 
+    namespace GUI
+    {
+        void HelpMarker(const char* desc)
+        {
+            ImGui::TextDisabled("*");
+            if (ImGui::IsItemHovered())
+            {
+                ImGui::BeginTooltip();
+                ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
+                ImGui::TextUnformatted(desc);
+                ImGui::PopTextWrapPos();
+                ImGui::EndTooltip();
+            }
+        }
+
+        void PlusMinusRGB(std::string name, ImVec4& rgba_vector)
+        {
+            std::string minus = " -  ##";
+            std::string plus = " + ##";
+            ImGui::SameLine(); ImGui::Text("RGB");
+            ImGui::SameLine();
+            bool minus_clicked = false;
+            std::string buttonMinus = minus + name;
+            if (ImGui::Button(buttonMinus.c_str()))
+                minus_clicked = true;
+            if (minus_clicked)
+            {
+                rgba_vector.x = rgba_vector.x - 0.01f; rgba_vector.y = rgba_vector.y - 0.01f; rgba_vector.z = rgba_vector.z - 0.01f;
+            }
+            ImGui::SameLine();
+            bool plus_clicked = false;
+            std::string buttonPlus = plus + name;
+            if (ImGui::Button(buttonPlus.c_str()))
+                plus_clicked = true;
+            if (plus_clicked)
+            {
+                rgba_vector.x = rgba_vector.x + 0.01f; rgba_vector.y = rgba_vector.y + 0.01f; rgba_vector.z = rgba_vector.z + 0.01f;
+            }
+        }
+    }
+    void HelpMarker(const char* desc)
+    {
+        ImGui::TextDisabled("*");
+        if (ImGui::IsItemHovered())
+        {
+            ImGui::BeginTooltip();
+            ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
+            ImGui::TextUnformatted(desc);
+            ImGui::PopTextWrapPos();
+            ImGui::EndTooltip();
+        }
+    }
+
+    void PlusMinusRGB(std::string name, ImVec4& rgba_vector)
+    {
+        std::string minus = " -  ##";
+        std::string plus = " + ##";
+        ImGui::SameLine(); ImGui::Text("RGB");
+        ImGui::SameLine();
+        bool minus_clicked = false;
+        std::string buttonMinus = minus + name;
+        if (ImGui::Button(buttonMinus.c_str()))
+            minus_clicked = true;
+        if (minus_clicked)
+        {
+            rgba_vector.x = rgba_vector.x - 0.01f; rgba_vector.y = rgba_vector.y - 0.01f; rgba_vector.z = rgba_vector.z - 0.01f;
+        }
+        ImGui::SameLine();
+        bool plus_clicked = false;
+        std::string buttonPlus = plus + name;
+        if (ImGui::Button(buttonPlus.c_str()))
+            plus_clicked = true;
+        if (plus_clicked)
+        {
+            rgba_vector.x = rgba_vector.x + 0.01f; rgba_vector.y = rgba_vector.y + 0.01f; rgba_vector.z = rgba_vector.z + 0.01f;
+        }
+    }
+
     bool pathIsValid(const std::string& path)
     {
         std::filesystem::path fsPath(path);
