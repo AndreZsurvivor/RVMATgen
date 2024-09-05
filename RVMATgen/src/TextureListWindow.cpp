@@ -1,7 +1,7 @@
 #include "RVMATgen.h"
 
 
-void RVMATgenLayer::createWindow_TextureList()
+bool RVMATgenLayer::createWindow_TextureList()
 {
     ImGui::Begin("Texture List");
 
@@ -23,49 +23,50 @@ void RVMATgenLayer::createWindow_TextureList()
     if (display_textures.empty())
     {
         ImGui::Text("No textures found. Use the 'Scan' button in the Configuration window to load textures.");
+        ImGui::End();
+        return false;
     }
-    else
+
+    ImGui::Text("Texture Sets");
+    if (ImGui::BeginListBox("##Texture Sets", ImVec2(-1, 400)))
     {
-        ImGui::Text("Texture Sets");
-        if (ImGui::BeginListBox("##Texture Sets", ImVec2(-1, 500)))
+        for (int n = 0; n < display_texture_sets.size(); n++)
         {
-            for (int n = 0; n < display_texture_sets.size(); n++)
-            {
-                const bool is_selected = (texset_current_idx == n);
-                if (ImGui::Selectable(display_texture_sets[n], is_selected))
-                    texset_current_idx = n;
+            const bool is_selected = (texset_current_idx == n);
+            if (ImGui::Selectable(display_texture_sets[n], is_selected))
+                texset_current_idx = n;
 
-                if (is_selected)
-                    ImGui::SetItemDefaultFocus();
-            }
-            ImGui::EndListBox();
+            if (is_selected)
+                ImGui::SetItemDefaultFocus();
         }
-        ImGui::Text("Texture Files");
-        if (ImGui::BeginListBox("##Texture Files", ImVec2(-1, 100)))
+        ImGui::EndListBox();
+    }
+    ImGui::Text("Texture Files");
+    if (ImGui::BeginListBox("##Texture Files", ImVec2(-1, 100)))
+    {
+        display_textures = rvmatGen::findAndCopyStrings(texture_keys, display_texture_sets[texset_current_idx]);
+        for (int n = 0; n < display_textures.size(); n++)
         {
-            display_textures = rvmatGen::findAndCopyStrings(texture_keys, display_texture_sets[texset_current_idx]);
-            for (int n = 0; n < display_textures.size(); n++)
-            {
-                const bool is_selected = (tex_current_idx == n);
-                if (ImGui::Selectable(display_textures[n], is_selected))
-                    tex_current_idx = n;
+            const bool is_selected = (tex_current_idx == n);
+            if (ImGui::Selectable(display_textures[n], is_selected))
+                tex_current_idx = n;
 
-                if (is_selected)
-                    ImGui::SetItemDefaultFocus();
-            }
-            ImGui::EndListBox();
+            if (is_selected)
+                ImGui::SetItemDefaultFocus();
         }
+        ImGui::EndListBox();
+    }
 
-        // Display selected texture details
-        if (tex_current_idx < texture_keys.size())
-        {
-            const std::string& selected_key = texture_keys[tex_current_idx];
-            const std::string& file_path = m_texture_manager.get_texture_path(selected_key);
+    // Display selected texture details
+    if (tex_current_idx < texture_keys.size())
+    {
+        const std::string& selected_key = texture_keys[tex_current_idx];
+        const std::string& file_path = m_texture_manager.get_texture_path(selected_key);
 
-            ImGui::Text("Selected Texture:");
-            ImGui::Text("Key: %s", selected_key.c_str());
-            ImGui::Text("File: %s", file_path.c_str());
-        }
+        ImGui::Text("Selected Texture:");
+        ImGui::Text("Key: %s", selected_key.c_str());
+        ImGui::Text("File: %s", file_path.c_str());
     }
     ImGui::End();
+    return true;
 }

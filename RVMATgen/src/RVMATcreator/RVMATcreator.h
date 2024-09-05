@@ -15,17 +15,17 @@ namespace rvmatGen
     public:
         RVMATcreator() = default;
 
-        bool createRVMAT(const rvmatGen::RVMATparameters& parameters)
+        bool createRVMAT(const rvmatGen::RVMATparameters& parameters, const std::string& prefix)
         {
             std::string rvmatContent = generateRVMATContent(parameters);
-            return writeRVMATFile(parameters.texture_set, rvmatContent);
+            return writeRVMATFile(parameters.texture_set, rvmatContent, prefix);
         }
 
     private:
 
-        bool writeRVMATFile(const std::string& texture_set, const std::string& content);
+        bool writeRVMATFile(const std::string& texture_set, const std::string& content, const std::string& prefix);
         std::string generateRVMATContent(const rvmatGen::RVMATparameters& parameters);
-        std::string getTexturePath(const std::string& textureSet, const std::string& type);
+        std::string getTexturePath(const std::string& textureSet, const std::string& type, const std::string& prefix);
 
         std::unordered_map<std::string, std::string> m_defaultTextures =
         {

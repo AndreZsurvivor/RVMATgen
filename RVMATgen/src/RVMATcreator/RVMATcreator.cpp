@@ -3,10 +3,14 @@ namespace rvmatGen
 {
     std::string quoteString(const std::string& str);
 
-    bool RVMATcreator::writeRVMATFile(const std::string& texture_set, const std::string& content)
+    bool RVMATcreator::writeRVMATFile(const std::string& texture_set, const std::string& content, const std::string& prefix)
     {
-        
-        std::string filename = "azw_" + texture_set + ".rvmat";
+        std::string filename;
+        if (prefix.empty())
+            filename = texture_set + ".rvmat";
+        else
+            filename = prefix + "_" + texture_set + ".rvmat";
+
         std::string fullPath = (std::filesystem::path(rvmatGen::Config::get_output_dir()) / filename).string();
 
         try {
@@ -25,6 +29,7 @@ namespace rvmatGen
     }
     std::string RVMATcreator::generateRVMATContent(const rvmatGen::RVMATparameters& parameters)
     {
+        const std::string& prefix = rvmatGen::Config::get_modder_prefix();
         std::stringstream ss;
         ss << "ambient[] = {" << parameters.ambientRGBA.x << "," << parameters.ambientRGBA.y << "," << parameters.ambientRGBA.z << "," << parameters.ambientRGBA.w << "};\n"
             << "diffuse[] = {" << parameters.diffuseRGBA.x << "," << parameters.diffuseRGBA.y << "," << parameters.diffuseRGBA.z << "," << parameters.diffuseRGBA.w << "};\n"
@@ -36,7 +41,7 @@ namespace rvmatGen
             << "VertexShaderID = \"Super\";\n"
             << "class Stage1\n"
             << "{\n"
-            << "    texture = \"" << getTexturePath(parameters.texture_set, "nohq") << "\";\n"
+            << "    texture = \"" << getTexturePath(parameters.texture_set, "nohq", prefix) << "\";\n"
             << "    uvSource = \"tex\";\n"
             << "    class uvTransform\n"
             << "    {\n"
@@ -63,11 +68,20 @@ namespace rvmatGen
 
         return ss.str();
     }
-    std::string RVMATcreator::getTexturePath(const std::string& textureSet, const std::string& type)
+    std::string RVMATcreator::getTexturePath(const std::string& textureSet, const std::string& type, const std::string& prefix)
     {
-        const std::string& source_filename = "azw_" + textureSet + "_" + type + ".png";
-        const std::string& output_filename = "azw_" + textureSet + "_" + type + ".paa";
-
+        std::string source_filename;
+        std::string output_filename;
+        if (prefix.empty())
+        {
+            source_filename = textureSet + "_" + type + ".png";
+            output_filename = textureSet + "_" + type + ".paa";
+        }
+        else
+        {
+            source_filename = prefix + "_" + textureSet + "_" + type + ".png";
+            output_filename = prefix + "_" + textureSet + "_" + type + ".paa";
+        }
 
         const std::string& sourceDir = rvmatGen::Config::get_texture_dir();
         const std::string& fullSourcePath = (std::filesystem::path(sourceDir) / source_filename).string();

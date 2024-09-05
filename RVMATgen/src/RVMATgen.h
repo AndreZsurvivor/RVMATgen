@@ -26,23 +26,25 @@ class RVMATgenLayer : public Walnut::Layer
 public:
 	virtual void OnUIRender() override
 	{
-		createWindow_Debug();
 		createWindow_Config();
 		createWindow_Parameter();
 		createWindow_TextureList();
-
+#ifdef _DEBUG
+		createWindow_Debug();
 		ImGui::ShowDemoWindow();
+#endif
 	}
 private:
 	rvmatGen::TextureManager m_texture_manager;
 	rvmatGen::Scanner m_scanner;
 	rvmatGen::RVMATcreator m_rvmatCreator;
 
-	void createWindow_Debug();
-	void createWindow_Config();
-	void createWindow_Parameter();
-	void createWindow_TextureList();
-	
+	bool createWindow_Config();
+	bool createWindow_Parameter();
+	bool createWindow_TextureList();
+#ifdef _DEBUG
+	bool createWindow_Debug();
+#endif
 };
 
 //Utility function declarations

@@ -45,6 +45,8 @@ namespace Walnut {
 
 		void Close();
 
+		void SetDefaultLayout(ImGuiID& dockspace_id, ImGuiDockNodeFlags& dockspace_flags);
+
 		float GetTime();
 		GLFWwindow* GetWindowHandle() const { return m_WindowHandle; }
 

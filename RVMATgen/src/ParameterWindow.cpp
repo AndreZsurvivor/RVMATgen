@@ -1,9 +1,18 @@
 #include "RVMATgen.h"
 #include "structs.h"
 
-void RVMATgenLayer::createWindow_Parameter()
+bool RVMATgenLayer::createWindow_Parameter()
 {
 	ImGui::Begin("RVMAT Parameters");//begin config window
+
+
+	const auto& texture_sets = m_texture_manager.get_texture_sets();
+	if (texture_sets.empty())
+	{
+		ImGui::Text("No textures found. Use the 'Scan' button in the Configuration window to load textures.");
+		ImGui::End();
+		return false;
+	}
 
 	ImGui::Text("Mod Texture Directory");
 	static char mod_data_dir[256] = "mymod\\data";
@@ -89,6 +98,7 @@ void RVMATgenLayer::createWindow_Parameter()
 			clicked = true;
 		if (clicked)
 		{
+			const std::string& prefix = rvmatGen::Config::get_modder_prefix();
 			rvmatGen::Config::set_mod_data_dir(mod_data_dir);
 			rvmatGen::RVMATparameters parameters;
 			parameters.ambientRGBA = ambientRGBA;
@@ -102,9 +112,10 @@ void RVMATgenLayer::createWindow_Parameter()
 			for (const auto& textureSet : texture_sets)
 			{
 				parameters.texture_set = textureSet;
-				bool success = m_rvmatCreator.createRVMAT(parameters);
+				bool success = m_rvmatCreator.createRVMAT(parameters, prefix);
 			}
 		}
 	}
 	ImGui::End();//end config window
+	return true;
 }

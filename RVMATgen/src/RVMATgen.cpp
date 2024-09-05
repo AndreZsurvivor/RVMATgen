@@ -5,7 +5,7 @@
 Walnut::Application* Walnut::CreateApplication(int argc, char** argv)
 {
 	Walnut::ApplicationSpecification spec;
-	spec.Name = "RVMAT Generator 3000";
+	spec.Name = "RVMAT Generator 3000 v0.1 by AndreZ";
 
 	Walnut::Application* app = new Walnut::Application(spec);
 	app->PushLayer<RVMATgenLayer>();

@@ -18,6 +18,7 @@
 
 // Emedded font
 #include "ImGui/Roboto-Regular.embed"
+#include <imgui_internal.h>
 
 extern bool g_ApplicationRunning;
 
@@ -625,7 +626,7 @@ namespace Walnut {
 				// We cannot preserve the docking relationship between an active window and an inactive docking, otherwise
 				// any change of dockspace/settings would lead to windows being stuck in limbo and never being visible.
 				ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
-				ImGui::Begin("DockSpace Demo", nullptr, window_flags);
+				ImGui::Begin("RVMATgen3000 MainWindow", nullptr, window_flags);
 				ImGui::PopStyleVar();
 
 				ImGui::PopStyleVar(2);
@@ -634,10 +635,15 @@ namespace Walnut {
 				ImGuiIO& io = ImGui::GetIO();
 				if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable)
 				{
-					ImGuiID dockspace_id = ImGui::GetID("VulkanAppDockspace");
+					ImGuiID dockspace_id = ImGui::GetID("RVMATgenAppDockspace");
+
+
+					if (ImGui::DockBuilderGetNode(dockspace_id) == NULL)
+						SetDefaultLayout(dockspace_id, dockspace_flags);
+
 					ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
 				}
-
+				/*
 				if (m_MenubarCallback)
 				{
 					if (ImGui::BeginMenuBar())
@@ -646,7 +652,7 @@ namespace Walnut {
 						ImGui::EndMenuBar();
 					}
 				}
-
+				*/
 				for (auto& layer : m_LayerStack)
 					layer->OnUIRender();
 
@@ -686,6 +692,26 @@ namespace Walnut {
 	void Application::Close()
 	{
 		m_Running = false;
+	}
+
+	void Application::SetDefaultLayout(ImGuiID& dockspace_id, ImGuiDockNodeFlags& dockspace_flags)
+	{
+		int width, height;
+		glfwGetFramebufferSize(m_WindowHandle, &width, &height);
+
+		ImGui::DockBuilderRemoveNode(dockspace_id); // Clear out existing layout
+		ImGui::DockBuilderAddNode(dockspace_id, dockspace_flags); // Add empty node
+		ImGui::DockBuilderSetNodeSize(dockspace_id, ImVec2(width, height));
+
+		ImGuiID dock_main_id = dockspace_id; // This variable will track the document node, however we are not using it here as we aren't docking anything into it.
+		ImGuiID dock_id_bottom = ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Down, 0.2f, NULL, &dock_main_id);
+		ImGuiID dock_id_topleft = ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Left, 0.5f, NULL, &dock_main_id);
+		ImGuiID dock_id_topright = dock_main_id;
+
+		ImGui::DockBuilderDockWindow("Configuration", dock_id_bottom);
+		ImGui::DockBuilderDockWindow("Texture List", dock_id_topleft);
+		ImGui::DockBuilderDockWindow("RVMAT Parameters", dock_id_topright);
+		ImGui::DockBuilderFinish(dockspace_id);
 	}
 
 	float Application::GetTime()

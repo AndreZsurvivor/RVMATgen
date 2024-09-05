@@ -7,4 +7,5 @@ namespace rvmatGen
     std::string Config::s_source_texture_dir;
     std::string Config::s_output_dir;
     std::string Config::s_imagetopaa_path;
+    std::string Config::s_modder_prefix;
 }
