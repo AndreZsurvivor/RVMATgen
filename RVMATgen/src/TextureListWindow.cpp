@@ -28,7 +28,7 @@ bool RVMATgenLayer::createWindow_TextureList()
         return false;
     }
 
-    ImGui::Text("Texture Sets  -> RVMAT");
+    ImGui::Text("Texture Sets");
     if (ImGui::BeginListBox("##Texture Sets", ImVec2(-1, 350)))
     {
         for (int n = 0; n < display_texture_sets.size(); n++)
@@ -68,7 +68,7 @@ bool RVMATgenLayer::createWindow_TextureList()
         ImGui::Text("Key: %s", selected_key.c_str());
         ImGui::Text("File: %s", file_path.c_str());
     }
-    ImGui::NewLine(); ImGui::NewLine();
+    ImGui::NewLine();
     //image converter button
     {
         static bool path_error = false;

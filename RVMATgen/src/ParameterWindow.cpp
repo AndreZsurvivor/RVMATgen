@@ -103,7 +103,7 @@ bool RVMATgenLayer::createWindow_Parameter()
 	ImGui::NewLine();
 	{
 		bool clicked = false;
-		if (ImGui::Button("create RVMAT Files"))
+		if (ImGui::Button("create RVMAT Files from Texture Sets"))
 			clicked = true;
 		if (clicked)
 		{

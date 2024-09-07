@@ -8,8 +8,8 @@ bool RVMATgenLayer::createWindow_Config()
 	ImGui::Begin("Configuration");//begin config window
 	ImGui::SetWindowFontScale(0.9);
 	static char scan_prefix[24] = "";
-	static char texture_path[256] = "D:\\testconvert";
-	static char output_dir[256] = "D:\\testconvert\\output";
+	static char texture_path[256] = "D:\\source_textures";
+	static char output_dir[256] = "D:\\rvmatGen_output";
 	static char imagetopaa_path[256] = "E:\\SteamLibrary\\steamapps\\common\\DayZ Tools\\Bin\\ImageToPAA\\ImageToPAA.exe";
 	static bool path_error_scan = false;
 	if (path_error_scan)

@@ -33,7 +33,8 @@ namespace rvmatGen
     {
         const std::string& prefix = rvmatGen::Config::get_scan_prefix();
         std::stringstream rvmat_content_ss;
-        rvmat_content_ss << "ambient[] = {" << parameters.ambientRGBA.x << "," << parameters.ambientRGBA.y << "," << parameters.ambientRGBA.z << "," << parameters.ambientRGBA.w << "};\n"
+        rvmat_content_ss << "////FILE CREATED WITH RVMATGEN3000 v0.1 (wow you are brave, i <3 u)////\n\n#define _ARMA_\n\n"
+            << "ambient[] = {" << parameters.ambientRGBA.x << "," << parameters.ambientRGBA.y << "," << parameters.ambientRGBA.z << "," << parameters.ambientRGBA.w << "};\n"
             << "diffuse[] = {" << parameters.diffuseRGBA.x << "," << parameters.diffuseRGBA.y << "," << parameters.diffuseRGBA.z << "," << parameters.diffuseRGBA.w << "};\n"
             << "forcedDiffuse[] = {" << parameters.forcedDiffuseRGBA.x << "," << parameters.forcedDiffuseRGBA.y << "," << parameters.forcedDiffuseRGBA.z << "," << parameters.forcedDiffuseRGBA.w << "};\n"
             << "emmisive[] = {" << parameters.emmisiveRGBA.x << "," << parameters.emmisiveRGBA.y << "," << parameters.emmisiveRGBA.z << "," << parameters.emmisiveRGBA.w << "};\n"
