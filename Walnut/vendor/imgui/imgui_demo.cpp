@@ -378,6 +378,7 @@ void ImGui::ShowDemoWindow(bool* p_open)
     //ImGui::PushItemWidth(-ImGui::GetWindowWidth() * 0.35f);
 
     // e.g. Leave a fixed amount of width for labels (by passing a negative value), the rest goes to widgets.
+    
     ImGui::PushItemWidth(ImGui::GetFontSize() * -12);
 
     // Menu Bar

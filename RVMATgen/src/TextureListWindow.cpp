@@ -3,8 +3,9 @@
 
 bool RVMATgenLayer::createWindow_TextureList()
 {
+    ImGui::SetWindowFontScale(0.95);
     ImGui::Begin("Texture List");
-
+    ImGui::SetWindowFontScale(0.9);
     const auto& texture_keys = m_texture_manager.get_texture_keys();
     const auto& texture_sets = m_texture_manager.get_texture_sets();
 
@@ -22,13 +23,13 @@ bool RVMATgenLayer::createWindow_TextureList()
 
     if (display_textures.empty())
     {
-        ImGui::Text("No textures found. Use the 'Scan' button in the Configuration window to load textures.");
+        ImGui::TextWrapped("No textures found. Use the 'Scan' button in the Configuration window to load textures.");
         ImGui::End();
         return false;
     }
 
-    ImGui::Text("Texture Sets");
-    if (ImGui::BeginListBox("##Texture Sets", ImVec2(-1, 400)))
+    ImGui::Text("Texture Sets  -> RVMAT");
+    if (ImGui::BeginListBox("##Texture Sets", ImVec2(-1, 350)))
     {
         for (int n = 0; n < display_texture_sets.size(); n++)
         {
@@ -66,6 +67,33 @@ bool RVMATgenLayer::createWindow_TextureList()
         ImGui::Text("Selected Texture:");
         ImGui::Text("Key: %s", selected_key.c_str());
         ImGui::Text("File: %s", file_path.c_str());
+    }
+    ImGui::NewLine(); ImGui::NewLine();
+    //image converter button
+    {
+        static bool path_error = false;
+        bool clicked = false;
+        if (ImGui::Button("Convert Scanned Files to PAA"))
+            clicked = true;
+        if (clicked)
+        {
+            std::string source = rvmatGen::Config::get_texture_dir();
+            std::string destination = rvmatGen::Config::get_output_dir();
+            std::string exepath = rvmatGen::Config::get_imagetopaa_path();
+            path_error = !rvmatGen::pathIsValid(source.c_str());
+            path_error = !rvmatGen::pathIsValid(destination.c_str());
+            path_error = !rvmatGen::isValidImagetopaaExe(exepath.c_str());
+
+            if (!path_error)
+            {
+                std::vector<std::string>& texture_keys = m_texture_manager.get_texture_keys();
+                rvmatGen::convertImagesInParallel(exepath, source, destination);
+            }
+            else
+                path_error = true;
+        }
+        if (path_error)
+            ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), "***PATH_ERROR***");
     }
     ImGui::End();
     return true;

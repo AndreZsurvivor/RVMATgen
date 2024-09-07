@@ -11,7 +11,8 @@ namespace rvmatGen
 		ImVec4 forcedDiffuseRGBA;
 		ImVec4 emmisiveRGBA;
 		ImVec4 specularRGBA;
-		int specularPower;
+		int specularPower = 0;
+		ImVec2 fresnel;
 
 	};
 }

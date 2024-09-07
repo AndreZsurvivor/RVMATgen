@@ -4,8 +4,10 @@ rvmatGen::Scanner scanner;
 
 bool RVMATgenLayer::createWindow_Config()
 {
+	ImGui::SetWindowFontScale(0.95);
 	ImGui::Begin("Configuration");//begin config window
-
+	ImGui::SetWindowFontScale(0.9);
+	static char scan_prefix[24] = "";
 	static char texture_path[256] = "D:\\testconvert";
 	static char output_dir[256] = "D:\\testconvert\\output";
 	static char imagetopaa_path[256] = "E:\\SteamLibrary\\steamapps\\common\\DayZ Tools\\Bin\\ImageToPAA\\ImageToPAA.exe";
@@ -28,7 +30,7 @@ bool RVMATgenLayer::createWindow_Config()
 			rvmatGen::Config::set_texture_dir(texture_path);
 			rvmatGen::Config::set_output_dir(output_dir);
 			rvmatGen::Config::set_imagetopaa_path(imagetopaa_path);
-			RVMATgenLayer layer;
+			rvmatGen::Config::set_scan_prefix(scan_prefix);
 			m_texture_manager.scan_and_update(texture_path);
 		}
 		else
@@ -38,8 +40,8 @@ bool RVMATgenLayer::createWindow_Config()
 	}
 
 	ImGui::InputText("Output Directory Path", output_dir, IM_ARRAYSIZE(output_dir));
-	ImGui::SameLine(); rvmatGen::GUI::HelpMarker(
-		"enter the path to your output folder\n");
+	ImGui::SameLine(); rvmatGen::GUI::HelpMarker("enter the path to your output folder\n");
+#ifdef _DEBUG
 	ImGui::SameLine();
 	clicked = false;
 	static bool path_error_output = false;
@@ -57,11 +59,10 @@ bool RVMATgenLayer::createWindow_Config()
 	}
 	if (path_error_output)
 		ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), "***OUTPUT_PATH_ERROR*** path or directory does not exist.");
-
-	
+#endif
 	ImGui::InputText("ImageToPAA path", imagetopaa_path, IM_ARRAYSIZE(imagetopaa_path));
-	ImGui::SameLine(); rvmatGen::GUI::HelpMarker(
-		"enter the path to your copy of imagetopaa.exe\n");
+	ImGui::SameLine(); rvmatGen::GUI::HelpMarker("enter the path to your copy of imagetopaa.exe\n");
+#ifdef _DEBUG
 	ImGui::SameLine();
 	clicked = false;
 	static bool path_error_imagetopaa = false;
@@ -79,22 +80,22 @@ bool RVMATgenLayer::createWindow_Config()
 	}
 	if (path_error_imagetopaa)
 		ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), "***IMAGETOPAA_PATH_ERROR*** path does not exist.");
-	
+#endif
 	{
-		static char modder_prefix[4] = "";
-		ImGui::InputText("Your Modder Prefix", modder_prefix, IM_ARRAYSIZE(modder_prefix));
-		ImGui::SameLine(); rvmatGen::GUI::HelpMarker("leave empty to scan all files in source dir\n");
-		ImGui::SameLine();
 		
+		ImGui::InputText("Scan Prefix", scan_prefix, IM_ARRAYSIZE(scan_prefix));
+		ImGui::SameLine(); rvmatGen::GUI::HelpMarker("leave empty to scan all files in source dir\n");
+#ifdef _DEBUG
+		ImGui::SameLine();
 		bool clicked = false;
-		if (ImGui::Button("Set##MODDERPREFIX"))
+		if (ImGui::Button("Set##SCANPREFIX"))
 			clicked = true;
 		if (clicked)
 		{
-			rvmatGen::Config::set_modder_prefix(modder_prefix);
+			rvmatGen::Config::set_scan_prefix(scan_prefix);
 		}
+#endif
 	}
-	
 	ImGui::End();//end config window
 	return true;
 }

@@ -34,8 +34,10 @@ public:
 		ImGui::ShowDemoWindow();
 #endif
 	}
+	static rvmatGen::TextureManager& get_TextureManager() { return m_texture_manager; }
+
 private:
-	rvmatGen::TextureManager m_texture_manager;
+	static rvmatGen::TextureManager m_texture_manager;
 	rvmatGen::Scanner m_scanner;
 	rvmatGen::RVMATcreator m_rvmatCreator;
 

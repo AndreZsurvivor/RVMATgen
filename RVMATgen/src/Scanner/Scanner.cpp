@@ -11,7 +11,7 @@ namespace rvmatGen
     {
         std::map<std::string, std::string> texture_files;
 
-        std::string prefix = rvmatGen::Config::get_modder_prefix();
+        std::string prefix = rvmatGen::Config::get_scan_prefix();
 
         std::string pattern = prefix + R"(_(\w+)(\d{4})_(co|nohq|smdi|as)\.(png|paa))";
         if (prefix.empty())

@@ -1,4 +1,5 @@
 #include "RVMATcreator/RVMATcreator.h"
+
 namespace rvmatGen
 {
     std::string quoteString(const std::string& str);
@@ -22,51 +23,61 @@ namespace rvmatGen
             file.close();
             return true;
         }
-        catch (const std::exception& e) {
-            // Handle or log the error
+        catch (const std::exception& e)
+        {
+            std::cout << "ERROR: writing file failed";
             return false;
         }
     }
     std::string RVMATcreator::generateRVMATContent(const rvmatGen::RVMATparameters& parameters)
     {
-        const std::string& prefix = rvmatGen::Config::get_modder_prefix();
-        std::stringstream ss;
-        ss << "ambient[] = {" << parameters.ambientRGBA.x << "," << parameters.ambientRGBA.y << "," << parameters.ambientRGBA.z << "," << parameters.ambientRGBA.w << "};\n"
+        const std::string& prefix = rvmatGen::Config::get_scan_prefix();
+        std::stringstream rvmat_content_ss;
+        rvmat_content_ss << "ambient[] = {" << parameters.ambientRGBA.x << "," << parameters.ambientRGBA.y << "," << parameters.ambientRGBA.z << "," << parameters.ambientRGBA.w << "};\n"
             << "diffuse[] = {" << parameters.diffuseRGBA.x << "," << parameters.diffuseRGBA.y << "," << parameters.diffuseRGBA.z << "," << parameters.diffuseRGBA.w << "};\n"
             << "forcedDiffuse[] = {" << parameters.forcedDiffuseRGBA.x << "," << parameters.forcedDiffuseRGBA.y << "," << parameters.forcedDiffuseRGBA.z << "," << parameters.forcedDiffuseRGBA.w << "};\n"
             << "emmisive[] = {" << parameters.emmisiveRGBA.x << "," << parameters.emmisiveRGBA.y << "," << parameters.emmisiveRGBA.z << "," << parameters.emmisiveRGBA.w << "};\n"
             << "specular[] = {" << parameters.specularRGBA.x << "," << parameters.specularRGBA.y << "," << parameters.specularRGBA.z << "," << parameters.specularRGBA.w << "};\n"
             << "specularPower = " << parameters.specularPower << ";\n"
             << "PixelShaderID = \"Super\";\n"
-            << "VertexShaderID = \"Super\";\n"
-            << "class Stage1\n"
-            << "{\n"
-            << "    texture = \"" << getTexturePath(parameters.texture_set, "nohq", prefix) << "\";\n"
-            << "    uvSource = \"tex\";\n"
-            << "    class uvTransform\n"
-            << "    {\n"
-            << "        aside[] = {1,0,0};\n"
-            << "        up[] = {0,1,0};\n"
-            << "        dir[] = {0,0,0};\n"
-            << "        pos[] = {0,0,0};\n"
-            << "    };\n"
-            << "};\n"
-            // ... (include other stages similarly)
-            << "class Stage7\n"
-            << "{\n"
-            << "    texture = \"dz\\data\\data\\env_land_co.paa\";\n"
-            << "    useWorldEnvMap = \"true\";\n"
-            << "    uvSource = \"tex\";\n"
-            << "    class uvTransform\n"
-            << "    {\n"
-            << "        aside[] = {1,0,0};\n"
-            << "        up[] = {0,1,0};\n"
-            << "        dir[] = {0,0,0};\n"
-            << "        pos[] = {0,0,0};\n"
-            << "    };\n"
-            << "};\n";
+            << "VertexShaderID = \"Super\";\n";
 
-        return ss.str();
+        // Function to add a stage to the stringstream
+        auto addStage = [&rvmat_content_ss](int stageNum, const std::string& texturePath, bool useWorldEnvMap = false) {
+            rvmat_content_ss << "class Stage" << stageNum << "\n"
+                << "{\n"
+                << "    texture = \"" << texturePath << "\";\n"
+                << "    uvSource = \"tex\";\n";
+
+            if (useWorldEnvMap) {
+                rvmat_content_ss << "    useWorldEnvMap = \"true\";\n";
+            }
+
+            rvmat_content_ss << "    class uvTransform\n"
+                << "    {\n"
+                << "        aside[] = {1,0,0};\n"
+                << "        up[] = {0,1,0};\n"
+                << "        dir[] = {0,0,0};\n"
+                << "        pos[] = {0,0,0};\n"
+                << "    };\n"
+                << "};\n";
+            };
+
+        // Add stages
+        addStage(1, getTexturePath(parameters.texture_set, "nohq", prefix));
+        addStage(2, "#(argb,8,8,3)color(0.5,0.5,0.5,1,DT)");
+        addStage(3, getTexturePath(parameters.texture_set, "co", prefix));
+        addStage(4, getTexturePath(parameters.texture_set, "as", prefix));
+        addStage(5, getTexturePath(parameters.texture_set, "smdi", prefix));
+        const float& fres_N = parameters.fresnel.x;
+        const float& fres_K = parameters.fresnel.y;
+        std::stringstream fresnel_values_ss;
+        fresnel_values_ss << std::fixed << std::setprecision(2) << fres_N << "," << fres_K;
+        std::string fresnel_value_string = "#(ai,64,64,1)fresnel(" + fresnel_values_ss.str() + ")";
+        addStage(6, fresnel_value_string);
+        addStage(7, "dz\\data\\data\\env_land_co.paa", true);
+
+        return rvmat_content_ss.str();
     }
     std::string RVMATcreator::getTexturePath(const std::string& textureSet, const std::string& type, const std::string& prefix)
     {

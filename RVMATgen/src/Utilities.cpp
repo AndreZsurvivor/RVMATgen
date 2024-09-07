@@ -25,7 +25,7 @@ namespace rvmatGen
         {
             std::string minus = " -  ##";
             std::string plus = " + ##";
-            ImGui::SameLine(); ImGui::Text("RGB");
+            ImGui::SameLine(); ImGui::Text("  RGB");
             ImGui::SameLine();
             bool minus_clicked = false;
             std::string buttonMinus = minus + name;
@@ -139,16 +139,26 @@ namespace rvmatGen
         }
     }
 
-    void convertImagesInParallel(const std::string& exePath, const std::string& inputDir, const std::string& outputDir) {
+    void convertImagesInParallel(const std::string& exePath, const std::string& inputDir, const std::string& outputDir)
+    {
+        RVMATgenLayer layer;
+        auto& texture_manager = layer.get_TextureManager();
+        auto& texture_files = texture_manager.get_texture_files();
+
         std::queue<std::filesystem::path> workQueue;
         for (const auto& entry : std::filesystem::directory_iterator(inputDir)) {
-            if (entry.is_regular_file() && (entry.path().extension() == ".png" || entry.path().extension() == ".jpg")) {
-                workQueue.push(entry.path());
+            if (entry.is_regular_file() && (entry.path().extension() == ".png" || entry.path().extension() == ".jpg"))
+            {
+                for (const auto& file : texture_files)
+                {
+                    if (texture_manager.get_texture_path(file.first) == entry.path())
+                        workQueue.push(entry.path());
+                }
             }
         }
 
         unsigned int threadCount = std::thread::hardware_concurrency();
-        threadCount = threadCount == 0 ? 4 : threadCount; // Use 4 threads if we can't detect core count
+        threadCount = threadCount == 0 ? 8 : threadCount; // Use 8 threads if we can't detect core count
 
         std::vector<std::thread> threads;
         for (unsigned int i = 0; i < threadCount; ++i) {

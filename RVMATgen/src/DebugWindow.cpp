@@ -19,9 +19,7 @@ bool RVMATgenLayer::createWindow_Debug()
 			path_error = !rvmatGen::isValidImagetopaaExe(exepath.c_str());
 			
 			if (!path_error)
-			{
 				rvmatGen::convertImagesInParallel(exepath, source, destination);
-			}
 			else
 				path_error = true;
 		}

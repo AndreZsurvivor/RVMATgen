@@ -1,6 +1,7 @@
 
 #include "RVMATgen.h"
 #include "Walnut/EntryPoint.h"
+rvmatGen::TextureManager RVMATgenLayer::m_texture_manager;
 
 Walnut::Application* Walnut::CreateApplication(int argc, char** argv)
 {
