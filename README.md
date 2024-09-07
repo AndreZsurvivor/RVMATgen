@@ -24,6 +24,7 @@ Just move the executable to it's own folder and run it from there.
 Clone the Repo recursively and run `scripts/Setup.bat` to generate Visual Studio 2022 solution/project files. Once you've opened the solution, you can build it from visual studio.
 
 ### 3rd party libaries
+- [Walnut](https://github.com/AndreZsurvivor/Walnut) (forked version)
 - [Dear ImGui](https://github.com/ocornut/imgui)
 - [GLFW](https://github.com/glfw/glfw)
 - [stb_image](https://github.com/nothings/stb)

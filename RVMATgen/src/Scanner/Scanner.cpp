@@ -17,10 +17,6 @@ namespace rvmatGen
         if (prefix.empty())
             pattern = R"((\w+)(\d{4})_(co|nohq|smdi|as)\.(png|paa))";
         std::regex udim_pattern(pattern);
-        
-
-            
-        
 
         for (const auto& entry : std::filesystem::directory_iterator(directory_path)) {
             if (entry.is_regular_file()) {
@@ -43,7 +39,6 @@ namespace rvmatGen
                 }
             }
         }
-
         return texture_files;
     }
 
@@ -61,19 +56,12 @@ namespace rvmatGen
                 std::string udim = match[2];
                 std::string texture_type = match[3];
 
-
                 std::string newTexSet = texture_set + udim;
                 int count = std::count(texture_sets.begin(), texture_sets.end(), newTexSet);
                 if (!count)
                     texture_sets.push_back(newTexSet);
-
-
             }
         }
-
         return texture_sets;
     }
-
-
-
 }
