@@ -27,6 +27,7 @@ namespace rvmatGen
             std::string plus = " + ##";
             ImGui::SameLine(); ImGui::Text("  RGB");
             ImGui::SameLine();
+            ImGui::PushButtonRepeat(true);
             bool minus_clicked = false;
             std::string buttonMinus = minus + name;
             if (ImGui::Button(buttonMinus.c_str()))
@@ -44,6 +45,7 @@ namespace rvmatGen
             {
                 rgba_vector.x = rgba_vector.x + 0.01f; rgba_vector.y = rgba_vector.y + 0.01f; rgba_vector.z = rgba_vector.z + 0.01f;
             }
+            ImGui::PopButtonRepeat();
         }
     }
 

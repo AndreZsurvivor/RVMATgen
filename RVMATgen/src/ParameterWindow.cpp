@@ -22,9 +22,10 @@ bool RVMATgenLayer::createWindow_Parameter()
 	ImGui::InputText("##MOD_TEXTURE_DIR", mod_data_dir, IM_ARRAYSIZE(mod_data_dir));
 	ImGui::SameLine(); rvmatGen::GUI::HelpMarker("enter the relative  path to your texture folder in the mod\n");
 
-	static float textWidth = 500.0f;
-	static float floatWidth = 100.0f;
-	static float intWidth = 125.0f;
+	static float scaleDPI = Walnut::Application::Get().GetScaleDPI();
+	static float textWidth = 500.0f * scaleDPI;
+	static float floatWidth = 100.0f * scaleDPI;
+	static float intWidth = 125.0f * scaleDPI;
 
 	ImGui::SetWindowFontScale(fonstScale_tiny); ImGui::NewLine();
 	ImGui::SetWindowFontScale(fontScale_default); ImGui::Text("Ambient");
@@ -100,6 +101,36 @@ bool RVMATgenLayer::createWindow_Parameter()
 	ImGui::SameLine(); ImGui::SetNextItemWidth(floatWidth); ImGui::InputFloat("##FRESNEL_N", &fresnel_N, 0.01f, 1.0f, "%.2f");
 	static float fresnel_K = 0.7f; ImGui::SameLine(); ImGui::Text("         K");
 	ImGui::SameLine();	ImGui::SetNextItemWidth(floatWidth); ImGui::InputFloat("##FRESNEL_K", &fresnel_K, 0.01f, 1.0f, "%.2f");
+	{
+		static int item_current_idx = 0; // Store the selection data as an index
+		const char* combo_preview_value = rvmatGen::fresnelValues[item_current_idx].Name;  // Preview value
+
+		if (ImGui::BeginCombo("Material", combo_preview_value))
+		{
+			for (int n = 0; n < IM_ARRAYSIZE(rvmatGen::fresnelValues); n++)
+			{
+				const bool is_selected = (item_current_idx == n);
+				if (ImGui::Selectable(rvmatGen::fresnelValues[n].Name, is_selected))
+				{
+					item_current_idx = n;
+					// You can access the selected Fresnel values like this:
+					ImVec2 selectedValue = rvmatGen::fresnelValues[item_current_idx].Value;
+					// Use selectedValue.x for N and selectedValue.y for K
+					fresnel_N = selectedValue.x;
+					fresnel_K = selectedValue.y;
+				}
+
+				// Set the initial focus when opening the combo
+				if (is_selected)
+					ImGui::SetItemDefaultFocus();
+			}
+			ImGui::EndCombo();
+		}
+
+		// Display the selected Fresnel values
+		ImGui::Text("Selected Material: %s", rvmatGen::fresnelValues[item_current_idx].Name);
+		ImGui::Text("N: %.2f, K: %.2f", rvmatGen::fresnelValues[item_current_idx].Value.x, rvmatGen::fresnelValues[item_current_idx].Value.y);
+	}
 	ImGui::NewLine();
 	{
 		bool clicked = false;

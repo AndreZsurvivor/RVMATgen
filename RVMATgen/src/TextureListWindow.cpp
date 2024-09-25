@@ -3,6 +3,7 @@
 
 bool RVMATgenLayer::createWindow_TextureList()
 {
+    const static float scaleDPI = Walnut::Application::Get().GetScaleDPI();
     ImGui::SetWindowFontScale(0.95);
     ImGui::Begin("Texture List");
     ImGui::SetWindowFontScale(0.9);
@@ -29,7 +30,7 @@ bool RVMATgenLayer::createWindow_TextureList()
     }
 
     ImGui::Text("Texture Sets");
-    if (ImGui::BeginListBox("##Texture Sets", ImVec2(-1, 350)))
+    if (ImGui::BeginListBox("##Texture Sets", ImVec2(-1, 350 * scaleDPI)))
     {
         for (int n = 0; n < display_texture_sets.size(); n++)
         {
@@ -43,7 +44,7 @@ bool RVMATgenLayer::createWindow_TextureList()
         ImGui::EndListBox();
     }
     ImGui::Text("Texture Files");
-    if (ImGui::BeginListBox("##Texture Files", ImVec2(-1, 100)))
+    if (ImGui::BeginListBox("##Texture Files", ImVec2(-1, 100 * scaleDPI)))
     {
         display_textures = rvmatGen::findAndCopyStrings(texture_keys, display_texture_sets[texset_current_idx]);
         for (int n = 0; n < display_textures.size(); n++)

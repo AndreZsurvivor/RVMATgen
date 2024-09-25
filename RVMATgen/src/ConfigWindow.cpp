@@ -24,7 +24,7 @@ bool RVMATgenLayer::createWindow_Config()
 		clicked = true;
 	if (clicked)
 	{
-		if (rvmatGen::pathIsValid(texture_path) && rvmatGen::pathIsValid(output_dir) && rvmatGen::isValidImagetopaaExe(imagetopaa_path))
+		if (rvmatGen::pathIsValid(texture_path) && rvmatGen::pathIsValid(output_dir))
 		{
 			path_error_scan = false;
 			rvmatGen::Config::set_texture_dir(texture_path);
