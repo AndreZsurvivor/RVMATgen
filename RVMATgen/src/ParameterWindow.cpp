@@ -1,5 +1,6 @@
 #include "RVMATgen.h"
 #include "structs.h"
+#include "constants.h"
 
 bool RVMATgenLayer::createWindow_Parameter()
 {
@@ -101,11 +102,14 @@ bool RVMATgenLayer::createWindow_Parameter()
 	ImGui::SameLine(); ImGui::SetNextItemWidth(floatWidth); ImGui::InputFloat("##FRESNEL_N", &fresnel_N, 0.01f, 1.0f, "%.2f");
 	static float fresnel_K = 0.7f; ImGui::SameLine(); ImGui::Text("         K");
 	ImGui::SameLine();	ImGui::SetNextItemWidth(floatWidth); ImGui::InputFloat("##FRESNEL_K", &fresnel_K, 0.01f, 1.0f, "%.2f");
+
+	////////////////////
+	/// FRESNEL DROPDOWN
 	{
 		static int item_current_idx = 0; // Store the selection data as an index
 		const char* combo_preview_value = rvmatGen::fresnelValues[item_current_idx].Name;  // Preview value
 
-		if (ImGui::BeginCombo("Material", combo_preview_value))
+		if (ImGui::BeginCombo("Default Materials", combo_preview_value))
 		{
 			for (int n = 0; n < IM_ARRAYSIZE(rvmatGen::fresnelValues); n++)
 			{

@@ -13,9 +13,9 @@ namespace rvmatGen
 
         std::string prefix = rvmatGen::Config::get_scan_prefix();
 
-        std::string pattern = prefix + R"(_(\w+)(\d{4})_(co|nohq|smdi|as)\.(png|paa))";
+        std::string pattern = prefix + m_scanningPattern.Pattern;
         if (prefix.empty())
-            pattern = R"((\w+)(\d{4})_(co|nohq|smdi|as)\.(png|paa))";
+            pattern = m_scanningPattern.Pattern;
         std::regex udim_pattern(pattern);
 
         for (const auto& entry : std::filesystem::directory_iterator(directory_path)) {

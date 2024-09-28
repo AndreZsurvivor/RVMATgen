@@ -8,6 +8,7 @@
 
 #include "Config/Config.h"
 #include "structs.h"
+#include "constants.h"
 
 namespace rvmatGen
 {

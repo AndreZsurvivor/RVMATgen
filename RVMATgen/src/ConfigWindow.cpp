@@ -1,11 +1,34 @@
 #include "RVMATgen.h"
 
-rvmatGen::Scanner scanner;
-
 bool RVMATgenLayer::createWindow_Config()
 {
 	ImGui::SetWindowFontScale(0.95);
 	ImGui::Begin("Configuration");//begin config window
+	////////////////////
+	/// SCAN PATTERN DROPDOWN
+	{
+		static int item_current_idx = 0; // Store the selection data as an index
+		const char* combo_preview_value = rvmatGen::patterns[item_current_idx].Name;  // Preview value
+
+		if (ImGui::BeginCombo("Scan Pattern", combo_preview_value))
+		{
+			for (int n = 0; n < IM_ARRAYSIZE(rvmatGen::patterns); n++)
+			{
+				const bool is_selected = (item_current_idx == n);
+				if (ImGui::Selectable(rvmatGen::patterns[n].Name, is_selected))
+				{
+					item_current_idx = n;
+					auto& pattern = rvmatGen::patterns[item_current_idx];
+					m_scanner.SetScanningPattern(pattern);
+				}
+
+				// Set the initial focus when opening the combo
+				if (is_selected)
+					ImGui::SetItemDefaultFocus();
+			}
+			ImGui::EndCombo();
+		}
+	}
 	ImGui::SetWindowFontScale(0.9);
 	static char scan_prefix[24] = "";
 	static char texture_path[256] = "D:\\source_textures";
